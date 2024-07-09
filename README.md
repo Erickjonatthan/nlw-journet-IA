@@ -1,1 +1,1 @@
-# nlw-journet-IA
+# nlw-journey-JAVA
