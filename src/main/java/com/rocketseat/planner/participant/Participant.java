@@ -18,26 +18,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "participant")
+@Table(name = "participants")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Participant {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(name = "is_confirmed", nullable = false)
-    private Boolean isConfirmed = false;
+    private Boolean isConfirmed;
 
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "email", nullable = false)
+    @Column(nullable = false)
     private String email;
-    
+
     @ManyToOne
     @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
@@ -45,5 +44,7 @@ public class Participant {
     public Participant(String email, Trip trip) {
         this.email = email;
         this.trip = trip;
+        this.isConfirmed = false;
+        this.name = "";
     }
 }

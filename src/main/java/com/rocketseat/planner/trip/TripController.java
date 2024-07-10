@@ -2,6 +2,8 @@ package com.rocketseat.planner.trip;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rocketseat.planner.participant.Participant;
+import com.rocketseat.planner.participant.ParticipantCreateResponse;
+import com.rocketseat.planner.participant.ParticipantData;
+import com.rocketseat.planner.participant.ParticipantRequestPayload;
 import com.rocketseat.planner.participant.ParticipantService;
 
 //OBS: O banco de dados é em memória, então os dados são perdidos ao reiniciar a aplicação. 
@@ -86,4 +92,28 @@ public class TripController {
         }
 
         return ResponseEntity.notFound().build();}
+
+        @PostMapping("/{id}/invite")
+        public ResponseEntity<ParticipantCreateResponse> inviteParticipant(@PathVariable UUID id, @RequestBody ParticipantRequestPayload payLoad) {
+            Optional<Trip> trip = this.repository.findById(id);
+
+            if (trip.isPresent()) {
+                Trip tripToUpdate = trip.get();
+            
+                ParticipantCreateResponse participantResponse = this.participantService.registerParticipantToTrip(payLoad.email(), tripToUpdate);
+
+                if(tripToUpdate.getIsConfirmed()){
+                    this.participantService.triggerConfirmationEmailToParticipant(payLoad.email());
+                }
+
+                return ResponseEntity.ok(participantResponse);
+            }
+            return ResponseEntity.notFound().build();
+        }
+
+        @GetMapping("/{id}/participants")
+        public ResponseEntity<List<ParticipantData>> getAllParticipants(@PathVariable UUID id){
+            List<ParticipantData> participantsList = this.participantService.getAllParticipantsFromTrip(id);
+            return ResponseEntity.ok(participantsList);
+        }
 }

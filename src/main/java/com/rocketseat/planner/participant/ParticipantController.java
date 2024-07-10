@@ -18,19 +18,19 @@ public class ParticipantController {
     @Autowired
     private ParticipantRepository repository;
 
-    @PostMapping("{id}/confirm")
-    public ResponseEntity<Participant> confirmParticipant(@PathVariable UUID id, @RequestBody ParticipantRequestPayload payload){
-        Optional<Participant> participant = repository.findById(id);
+    @PostMapping("/{id}/confirm")
+    public ResponseEntity<Participant> confirmParticipant(@PathVariable UUID id,
+            @RequestBody ParticipantRequestPayload payload) {
+        Optional<Participant> participant = this.repository.findById(id);
 
-        if(participant.isPresent()){
-            Participant participantToConfirm = participant.get();
-            participantToConfirm.setIsConfirmed(true);
-            participantToConfirm.setName(payload.name());
-            participantToConfirm.setEmail(payload.email());
+        if (participant.isPresent()) {
+            Participant rawParticipant = participant.get();
+            rawParticipant.setIsConfirmed(true);
+            rawParticipant.setName(payload.name());
 
-            repository.save(participantToConfirm);
+            this.repository.save(rawParticipant);
 
-            return ResponseEntity.ok(participantToConfirm);
+            return ResponseEntity.ok(rawParticipant);
         }
 
         return ResponseEntity.notFound().build();
