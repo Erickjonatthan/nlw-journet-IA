@@ -4,5 +4,5 @@ CREATE TABLE participants (
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     is_confirmed BOOLEAN NOT NULL DEFAULT FALSE,
-    FOREIGN KEY (trip_id) REFERENCES trips(id)
+    FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE
 );
