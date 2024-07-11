@@ -1,4 +1,4 @@
-package com.rocketseat.planner.activities;
+package com.rocketseat.planner.activitie;
 
 
 
